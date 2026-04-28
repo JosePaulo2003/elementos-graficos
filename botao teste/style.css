@@ -1,85 +1,619 @@
-/* Reset basico */
-* {
+/* ============================================ */
+/* RESET E VARIÁVEIS DE CORES                    */
+/* ============================================ */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Fundo da pagina na cor bege/tan */
+/* Cores do tema (fácil de trocar depois) */
+:root {
+    --fundo: #0a0a1a;                /* Fundo escuro principal */
+    --fundo-card: rgba(17, 17, 40, 0.6); /* Fundo dos cards (semi-transparente) */
+    --roxo: #7c3aed;                 /* Cor de destaque roxa */
+    --azul: #3b82f6;                 /* Cor de destaque azul */
+    --ciano: #06b6d4;                /* Cor de destaque ciano */
+    --texto: #f0f0ff;                /* Texto principal (quase branco) */
+    --texto-claro: #9ca3c0;          /* Texto secundário (cinza claro) */
+    --borda-card: rgba(124, 58, 237, 0.2); /* Borda dos cards */
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 60px;
-    background-color: #D2B48C;
-    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow-x: hidden;
 }
 
-/* Largura comum para ambos os botoes */
-.botao-largura {
-    width: 320px;
+/* ============================================ */
+/* FUNDO ANIMADO COM GRADIENTES                  */
+/* ============================================ */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Três gradientes sobrepostos criando manchas de cor */
+    background:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(124, 58, 237, 0.12), transparent 60%),
+        radial-gradient(ellipse 60% 80% at 90% 80%, rgba(59, 130, 246, 0.1), transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(6, 182, 212, 0.05), transparent 70%);
+    animation: fundoAnimado 15s ease-in-out infinite alternate;
+    z-index: 0;
+    pointer-events: none;
 }
 
-/* === BOTAO 1: PLANO === */
-.botao-plano {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 56px;
-    border-radius: 28px;
-    background-color: #5C1A1A;
-    color: #FFFFFF;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    cursor: default;
+/* Animação que faz o fundo "respirar" */
+@keyframes fundoAnimado {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { opacity: 0.8; transform: scale(1.1) rotate(1deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-1deg); }
 }
 
-/* === BOTAO 2: 3D COM PROFUNDIDADE REAL === */
-/* Base do botao: camada inferior mais escura que cria a espessura */
-.botao-3d-base {
+/* ============================================ */
+/* CANVAS DE PARTÍCULAS                          */
+/* ============================================ */
+#particulas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none; /* Não bloqueia cliques */
+}
+
+/* ============================================ */
+/* LUZ QUE SEGUE O CURSOR                       */
+/* ============================================ */
+#luz-cursor {
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    /* Gradiente circular suave roxo */
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.08), transparent 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+    transition: left 0.1s ease-out, top 0.1s ease-out;
+}
+
+/* ============================================ */
+/* CONTAINER PRINCIPAL                           */
+/* ============================================ */
+.container {
     position: relative;
-    height: 62px;
-    border-radius: 31px;
-    background-color: #3A0F0F;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 150ms ease;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
-/* Topo do botao: camada superior mais clara que fica elevada */
-.botao-3d-topo {
+/* ============================================ */
+/* CABEÇALHO (TÍTULO DA PÁGINA)                  */
+/* ============================================ */
+.cabecalho {
+    text-align: center;
+    padding: 100px 0 60px;
+}
+
+/* Selo "PORTFÓLIO" acima do título */
+.selo {
+    display: inline-block;
+    padding: 8px 24px;
+    border: 1px solid var(--borda-card);
+    border-radius: 50px;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--roxo);
+    background: rgba(124, 58, 237, 0.06);
+    margin-bottom: 32px;
+    animation: aparecerDescendo 0.8s ease-out;
+}
+
+/* Título principal com gradiente animado */
+.titulo {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -2px;
+    /* Gradiente de roxo -> azul -> ciano animado */
+    background: linear-gradient(135deg, var(--roxo), var(--azul), var(--ciano), var(--roxo));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradienteAnimado 6s ease infinite, aparecerSubindo 1s ease-out;
+    position: relative;
+}
+
+/* Animação do gradiente do título */
+@keyframes gradienteAnimado {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Efeito glitch: cópias do título que tremem */
+.titulo::before,
+.titulo::after {
+    content: attr(data-text);
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--roxo), var(--azul), var(--ciano));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.titulo::before {
+    animation: glitch1 3s infinite;
+    clip-path: inset(0 0 80% 0); /* Mostra só o topo */
+    opacity: 0.8;
+}
+
+.titulo::after {
+    animation: glitch2 3s infinite;
+    clip-path: inset(80% 0 0 0); /* Mostra só a base */
+    opacity: 0.8;
+}
+
+/* Tremidas rápidas do glitch */
+@keyframes glitch1 {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-3px, 1px); }
+    94% { transform: translate(3px, -1px); }
+    96% { transform: translate(-2px, 2px); }
+}
+
+@keyframes glitch2 {
+    0%, 90%, 100% { transform: translate(0); }
+    91% { transform: translate(2px, -1px); }
+    93% { transform: translate(-3px, 2px); }
+    95% { transform: translate(1px, -2px); }
+}
+
+/* Subtítulo abaixo do título */
+.subtitulo {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--texto-claro);
+    margin-top: 20px;
+    animation: aparecerSubindo 1s ease-out 0.3s both;
+}
+
+/* ============================================ */
+/* INDICADOR DE SCROLL (3 BOLINHAS PULSANDO)     */
+/* ============================================ */
+.scroll-indicador {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 40px;
+    animation: aparecerSubindo 1s ease-out 0.6s both;
+}
+
+.scroll-indicador span {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--roxo);
+    opacity: 0.5;
+    animation: bolinhaPulando 1.5s ease-in-out infinite;
+}
+
+/* Cada bolinha com delay diferente */
+.scroll-indicador span:nth-child(2) { animation-delay: 0.15s; }
+.scroll-indicador span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bolinhaPulando {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+    40% { transform: translateY(10px); opacity: 0.8; }
+}
+
+/* ============================================ */
+/* GRID DE PROJETOS                              */
+/* ============================================ */
+.projetos-grid {
+    display: grid;
+    /* Cards automáticos, mínimo 300px cada */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+    padding: 40px 0 80px;
+}
+
+/* ============================================ */
+/* CARD DE PROJETO (BASE PARA TODOS)             */
+/* ============================================ */
+.card-projeto {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    /* Animação de entrada: começa invisível e sobe */
+    animation: cardEntrando 0.6s ease-out both;
+}
+
+/* Delay escalonado para cada card aparecer um após o outro */
+.card-projeto:nth-child(1) { animation-delay: 0s; }
+.card-projeto:nth-child(2) { animation-delay: 0.1s; }
+.card-projeto:nth-child(3) { animation-delay: 0.2s; }
+.card-projeto:nth-child(4) { animation-delay: 0.3s; }
+.card-projeto:nth-child(5) { animation-delay: 0.4s; }
+.card-projeto:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes cardEntrando {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ============================================ */
+/* CARD ATIVO (PROJETO EXISTENTE)                */
+/* ============================================ */
+.card-projeto.ativo {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Conteúdo interno do card */
+.card-conteudo {
+    position: relative;
+    z-index: 2;
+    padding: 36px 32px;
+    /* Fundo semi-transparente com efeito vidro (glassmorphism) */
+    background: var(--fundo-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid var(--borda-card);
+    height: 100%;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.4s ease;
+}
+
+/* Hover no card ativo: borda brilha mais e sombra aparece */
+.card-projeto.ativo:hover .card-conteudo {
+    border-color: rgba(124, 58, 237, 0.5);
+}
+
+.card-projeto.ativo:hover {
+    box-shadow:
+        0 20px 60px rgba(124, 58, 237, 0.15),
+        0 0 40px rgba(59, 130, 246, 0.08);
+}
+
+/* Efeito de clique: card diminui um pouco */
+.card-projeto.ativo:active {
+    transform: scale(0.98);
+    transition-duration: 0.1s;
+}
+
+/* --- Ícone do card --- */
+.card-icone {
+    width: 56px;
     height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--roxo), var(--azul));
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 28px;
-    background-color: #5C1A1A;
-    color: #FFFFFF;
+    margin-bottom: 4px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-icone svg {
+    width: 28px;
+    height: 28px;
+    color: white;
+}
+
+/* Ícone cresce e brilha no hover */
+.card-projeto.ativo:hover .card-icone {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+}
+
+/* --- Título e descrição do card --- */
+.card-titulo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--texto);
+    letter-spacing: -0.5px;
+}
+
+.card-desc {
+    font-size: 0.9rem;
+    color: var(--texto-claro);
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+/* --- Tags de tecnologia --- */
+.card-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.tag {
+    padding: 4px 14px;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: rgba(124, 58, 237, 0.12);
+    color: var(--roxo);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Tags ficam mais fortes no hover */
+.card-projeto.ativo:hover .tag {
+    background: rgba(124, 58, 237, 0.2);
+    border-color: rgba(124, 58, 237, 0.4);
+}
+
+/* --- Seta que aparece no hover --- */
+.card-seta {
+    position: absolute;
+    bottom: 32px;
+    right: 32px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(124, 58, 237, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 18px;
-    font-weight: bold;
-    /* Sombra interna sutil no topo para simular luz */
-    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.12);
-    transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+    color: var(--roxo);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
 }
 
-/* Estado hover: topo escurece levemente e a profundidade diminui um pouco */
-.botao-3d-base:hover .botao-3d-topo {
-    background-color: #4E1515;
-    transform: translateY(2px);
-    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.08);
+.card-projeto.ativo:hover .card-seta {
+    opacity: 1;
+    transform: translateX(0);
 }
 
-/* Estado ativo/pressionado: topo desce, a espessura desaparece e parece pressionado */
-.botao-3d-base:active .botao-3d-topo {
-    background-color: #3D1111;
-    transform: translateY(6px);
-    /* Sombra interna mais forte para simular botao pressionado */
-    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.35);
+/* --- Brilho que passa pelo card no hover --- */
+.card-brilho {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.8s ease;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.card-projeto.ativo:hover .card-brilho {
+    left: 120%;
+}
+
+/* ============================================ */
+/* CARD VAZIO (ESPAÇO PARA FUTUROS PROJETOS)     */
+/* ============================================ */
+.card-projeto.vazio {
+    cursor: default;
+}
+
+.card-projeto.vazio .card-conteudo {
+    background: rgba(17, 17, 40, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    /* Borda tracejada para indicar que está vazio */
+    border: 2px dashed rgba(124, 58, 237, 0.15);
+    /* Centraliza o conteúdo */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: border-color 0.4s ease, background 0.4s ease;
+}
+
+/* Hover no card vazio: borda fica mais visível */
+.card-projeto.vazio:hover .card-conteudo {
+    border-color: rgba(124, 58, 237, 0.3);
+    background: rgba(124, 58, 237, 0.04);
+}
+
+.card-projeto.vazio .card-titulo {
+    font-size: 1.1rem;
+    color: var(--texto-claro);
+    font-weight: 500;
+}
+
+.card-projeto.vazio .card-desc {
+    font-size: 0.82rem;
+    color: rgba(156, 163, 192, 0.5);
+}
+
+/* --- Ícone "+" dos cards vazios --- */
+.icone-mais {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+}
+
+/* As duas linhas que formam o "+" */
+.linha-mais {
+    position: absolute;
+    background: rgba(124, 58, 237, 0.15);
+    border-radius: 2px;
+    transition: background 0.4s ease, transform 0.4s ease;
+}
+
+/* Linha horizontal do "+" */
+.linha-mais:first-child {
+    width: 24px;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Linha vertical do "+" */
+.linha-mais:last-child {
+    width: 2px;
+    height: 24px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Hover: linhas ficam roxas e a horizontal gira 90 graus (vira um X) */
+.card-projeto.vazio:hover .linha-mais {
+    background: var(--roxo);
+}
+
+.card-projeto.vazio:hover .linha-mais:first-child {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* ============================================ */
+/* RODAPÉ                                       */
+/* ============================================ */
+.rodape {
+    text-align: center;
+    padding: 40px 0 60px;
+    color: var(--texto-claro);
+    font-size: 0.85rem;
+    animation: aparecerSubindo 1s ease-out 1.2s both;
+}
+
+/* Coração pulsante */
+.coracao {
+    color: #ef4444;
+    display: inline-block;
+    animation: coracaoPulso 1.5s ease-in-out infinite;
+}
+
+@keyframes coracaoPulso {
+    0%, 40%, 100% { transform: scale(1); }
+    10% { transform: scale(1.2); }
+    20% { transform: scale(1.1); }
+    30% { transform: scale(1.25); }
+}
+
+/* ============================================ */
+/* ANIMAÇÕES GENÉRICAS                          */
+/* ============================================ */
+@keyframes aparecerSubindo {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aparecerDescendo {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================ */
+/* RESPONSIVO (TELAS MENORES)                    */
+/* ============================================ */
+
+/* Tablet e celular paisagem */
+@media (max-width: 768px) {
+    .cabecalho {
+        padding: 70px 0 40px;
+    }
+
+    .projetos-grid {
+        grid-template-columns: 1fr; /* Uma coluna só */
+        gap: 24px;
+        padding: 20px 0 60px;
+    }
+
+    .card-conteudo {
+        min-height: 220px;
+        padding: 28px 24px;
+    }
+
+    .selo {
+        font-size: 10px;
+        letter-spacing: 3px;
+    }
+
+    /* Esconde a luz do cursor no mobile */
+    #luz-cursor {
+        display: none;
+    }
+}
+
+/* Celular pequeno */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .card-conteudo {
+        min-height: 200px;
+        padding: 24px 20px;
+    }
+
+    .card-icone {
+        width: 48px;
+        height: 48px;
+    }
+
+    .card-icone svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ============================================ */
+/* ESTILO DA SELEÇÃO DE TEXTO                    */
+/* ============================================ */
+::selection {
+    background: var(--roxo);
+    color: white;
+}
+
+/* ============================================ */
+/* BARRA DE ROLAGEM CUSTOMIZADA                  */
+/* ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--fundo);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--roxo);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--azul);
 }
