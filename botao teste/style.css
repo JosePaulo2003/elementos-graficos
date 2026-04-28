@@ -1,0 +1,85 @@
+/* Reset basico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fundo da pagina na cor bege/tan */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    background-color: #D2B48C;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Largura comum para ambos os botoes */
+.botao-largura {
+    width: 320px;
+}
+
+/* === BOTAO 1: PLANO === */
+.botao-plano {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    border-radius: 28px;
+    background-color: #5C1A1A;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    cursor: default;
+}
+
+/* === BOTAO 2: 3D COM PROFUNDIDADE REAL === */
+/* Base do botao: camada inferior mais escura que cria a espessura */
+.botao-3d-base {
+    position: relative;
+    height: 62px;
+    border-radius: 31px;
+    background-color: #3A0F0F;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 150ms ease;
+}
+
+/* Topo do botao: camada superior mais clara que fica elevada */
+.botao-3d-topo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 28px;
+    background-color: #5C1A1A;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    /* Sombra interna sutil no topo para simular luz */
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.12);
+    transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* Estado hover: topo escurece levemente e a profundidade diminui um pouco */
+.botao-3d-base:hover .botao-3d-topo {
+    background-color: #4E1515;
+    transform: translateY(2px);
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.08);
+}
+
+/* Estado ativo/pressionado: topo desce, a espessura desaparece e parece pressionado */
+.botao-3d-base:active .botao-3d-topo {
+    background-color: #3D1111;
+    transform: translateY(6px);
+    /* Sombra interna mais forte para simular botao pressionado */
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.35);
+}
