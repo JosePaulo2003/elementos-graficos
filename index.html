@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Projetos</title>
+    <!-- Arquivo de estilos -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Canvas para as partículas animadas no fundo -->
+    <canvas id="particulas"></canvas>
+
+    <!-- Luz que segue o cursor do mouse -->
+    <div id="luz-cursor"></div>
+
+    <!-- Container principal da página -->
+    <div class="container">
+
+        <!-- Cabeçalho com título e subtítulo -->
+        <header class="cabecalho">
+            <span class="selo">&#9670; PORTFÓLIO</span>
+            <h1 class="titulo">Meus Projetos</h1>
+            <p class="subtitulo">Clique em um projeto para abrí-lo</p>
+
+            <!-- Indicador de scroll animado (3 bolinhas) -->
+            <div class="scroll-indicador">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </header>
+
+        <!-- Grid com os cards de projetos -->
+        <section class="projetos-grid">
+
+            <!-- ============================================ -->
+            <!-- CARD DE PROJETO EXISTENTE: Botão Teste       -->
+            <!-- Cada projeto ativo é um link <a>             -->
+            <!-- ============================================ -->
+            <a href="./botao teste/index.html" class="card-projeto ativo">
+                <div class="card-conteudo">
+                    <!-- Ícone do projeto -->
+                    <div class="card-icone">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="8" width="18" height="8" rx="4"/>
+                            <circle cx="9" cy="12" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <!-- Nome do projeto -->
+                    <h2 class="card-titulo">Botão Teste</h2>
+                    <!-- Descrição curta -->
+                    <p class="card-desc">Botões plano e 3D com efeitos interativos</p>
+                    <!-- Tags/tecnologias usadas -->
+                    <div class="card-tags">
+                        <span class="tag">CSS</span>
+                        <span class="tag">HTML</span>
+                        <span class="tag">3D</span>
+                    </div>
+                    <!-- Seta que aparece no hover -->
+                    <div class="card-seta">&#8594;</div>
+                </div>
+                <!-- Brilho que passa pelo card no hover -->
+                <div class="card-brilho"></div>
+            </a>
+
+            <!-- ============================================ -->
+            <!-- ESPAÇOS VAZIOS PARA FUTUROS PROJETOS         -->
+            <!-- São cards com borda tracejada e ícone "+"    -->
+            <!-- Para adicionar um projeto novo:              -->
+            <!--   1. Copie o card "ativo" acima              -->
+            <!--   2. Troque o href, título, descrição e tags -->
+            <!--   3. Apague este card vazio                  -->
+            <!-- ============================================ -->
+            <div class="card-projeto vazio">
+                <div class="card-conteudo">
+                    <div class="icone-mais">
+                        <span class="linha-mais"></span>
+                        <span class="linha-mais"></span>
+                    </div>
+                    <h2 class="card-titulo">Em breve...</h2>
+                    <p class="card-desc">Novo projeto chegando</p>
+                </div>
+            </div>
+
+            <div class="card-projeto vazio">
+                <div class="card-conteudo">
+                    <div class="icone-mais">
+                        <span class="linha-mais"></span>
+                        <span class="linha-mais"></span>
+                    </div>
+                    <h2 class="card-titulo">Em breve...</h2>
+                    <p class="card-desc">Novo projeto chegando</p>
+                </div>
+            </div>
+
+            <div class="card-projeto vazio">
+                <div class="card-conteudo">
+                    <div class="icone-mais">
+                        <span class="linha-mais"></span>
+                        <span class="linha-mais"></span>
+                    </div>
+                    <h2 class="card-titulo">Em breve...</h2>
+                    <p class="card-desc">Novo projeto chegando</p>
+                </div>
+            </div>
+
+            <div class="card-projeto vazio">
+                <div class="card-conteudo">
+                    <div class="icone-mais">
+                        <span class="linha-mais"></span>
+                        <span class="linha-mais"></span>
+                    </div>
+                    <h2 class="card-titulo">Em breve...</h2>
+                    <p class="card-desc">Novo projeto chegando</p>
+                </div>
+            </div>
+
+            <div class="card-projeto vazio">
+                <div class="card-conteudo">
+                    <div class="icone-mais">
+                        <span class="linha-mais"></span>
+                        <span class="linha-mais"></span>
+                    </div>
+                    <h2 class="card-titulo">Em breve...</h2>
+                    <p class="card-desc">Novo projeto chegando</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Rodapé -->
+        <footer class="rodape">
+            <p>&copy; 2026 &mdash; Feito com <span class="coracao">&#9829;</span> e código</p>
+        </footer>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- JavaScript: partículas e efeitos interativos  -->
+    <!-- ============================================ -->
+    <script>
+        // --- CONFIGURAÇÃO DO CANVAS DE PARTÍCULAS ---
+        const canvas = document.getElementById('particulas');
+        const ctx = canvas.getContext('2d');
+        let particulas = [];
+        let mouse = { x: -1000, y: -1000 };
+
+        // Ajusta o tamanho do canvas ao da janela
+        function ajustarCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        ajustarCanvas();
+        window.addEventListener('resize', ajustarCanvas);
+
+        // --- CLASSE PARTÍCULA ---
+        // Cada partícula é um ponto que flutua na tela
+        class Particula {
+            constructor() {
+                this.reiniciar();
+            }
+            reiniciar() {
+                // Posição aleatória na tela
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                // Tamanho aleatório pequeno
+                this.tamanho = Math.random() * 2.5 + 0.5;
+                // Velocidade aleatória lenta
+                this.velX = (Math.random() - 0.5) * 0.5;
+                this.velY = (Math.random() - 0.5) * 0.5;
+                // Opacidade e cor (tons de roxo/azul)
+                this.opacidade = Math.random() * 0.5 + 0.1;
+                this.cor = Math.random() * 60 + 240;
+            }
+            atualizar() {
+                // Move a partícula
+                this.x += this.velX;
+                this.y += this.velY;
+
+                // Se o mouse estiver perto, a partícula é atraída suavemente
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 200) {
+                    this.x += dx * 0.002;
+                    this.y += dy * 0.002;
+                    this.opacidade = Math.min(this.opacidade + 0.01, 0.7);
+                } else {
+                    this.opacidade = Math.max(this.opacidade - 0.005, 0.1);
+                }
+
+                // Rebate nas bordas da tela
+                if (this.x < 0 || this.x > canvas.width) this.velX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.velY *= -1;
+            }
+            desenhar() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.tamanho, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.cor}, 80%, 70%, ${this.opacidade})`;
+                ctx.fill();
+            }
+        }
+
+        // Cria as partículas (quantidade baseada na largura da tela)
+        const qtdParticulas = Math.min(100, Math.floor(window.innerWidth * 0.07));
+        for (let i = 0; i < qtdParticulas; i++) {
+            particulas.push(new Particula());
+        }
+
+        // Desenha linhas entre partículas próximas
+        function desenharConexoes() {
+            for (let i = 0; i < particulas.length; i++) {
+                for (let j = i + 1; j < particulas.length; j++) {
+                    const dx = particulas[i].x - particulas[j].x;
+                    const dy = particulas[i].y - particulas[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    // Só conecta se estiverem perto
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particulas[i].x, particulas[i].y);
+                        ctx.lineTo(particulas[j].x, particulas[j].y);
+                        ctx.strokeStyle = `hsla(260, 60%, 60%, ${0.12 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Loop de animação das partículas
+        function animarParticulas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particulas.forEach(p => {
+                p.atualizar();
+                p.desenhar();
+            });
+            desenharConexoes();
+            requestAnimationFrame(animarParticulas);
+        }
+        animarParticulas();
+
+        // --- RASTREAMENTO DO MOUSE ---
+        document.addEventListener('mousemove', (e) => {
+            // Salva posição do mouse para as partículas
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+
+            // Move a luz que segue o cursor
+            const luz = document.getElementById('luz-cursor');
+            luz.style.left = e.clientX + 'px';
+            luz.style.top = e.clientY + 'px';
+        });
+
+        // --- EFEITO 3D NOS CARDS AO PASSAR O MOUSE ---
+        document.querySelectorAll('.card-projeto.ativo').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centroX = rect.width / 2;
+                const centroY = rect.height / 2;
+                // Calcula inclinação baseada na posição do mouse
+                const rotX = (y - centroY) / 12;
+                const rotY = (centroX - x) / 12;
+                card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.04)`;
+            });
+            // Remove inclinação quando o mouse sai
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    </script>
+
+</body>
+</html>
